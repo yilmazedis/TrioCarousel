@@ -104,47 +104,34 @@ final class TrioCarouselView: UIView {
     currentState = 1
     emptyImages()
     positionStates(state: .centerCenter)
+
+    leftImageView.isHidden = images.count < 2
+    centerImageView.isHidden = images.count < 1
+    rightImageView.isHidden = images.count < 3
+    backImageView.isHidden = images.count < 3
+
     switch images.count {
     case 0:
-      leftImageView.isHidden = true
-      centerImageView.isHidden = true
-      rightImageView.isHidden = true
-      backImageView.isHidden = true
+      break
     case 1:
       currentImageIndex = 0
-      updateCenterItem(with: 0)
+      updateCenterItem(with: currentImageIndex)
       centerImageView.image = images[0]
-      leftImageView.isHidden = true
-      centerImageView.isHidden = false
-      rightImageView.isHidden = true
-      backImageView.isHidden = true
     case 2:
-      updateCenterItem(with: 1)
+      updateCenterItem(with: currentImageIndex)
       leftImageView.image = images[0]
       centerImageView.image = images[1]
-      leftImageView.isHidden = false
-      centerImageView.isHidden = false
-      rightImageView.isHidden = true
-      backImageView.isHidden = true
     case 3:
-      updateCenterItem(with: 1)
+      updateCenterItem(with: currentImageIndex)
       leftImageView.image = images[0]
       centerImageView.image = images[1]
       rightImageView.image = images[2]
-      leftImageView.isHidden = false
-      centerImageView.isHidden = false
-      rightImageView.isHidden = false
-      backImageView.isHidden = false
     default:
-      updateCenterItem(with: 1)
+      updateCenterItem(with: currentImageIndex)
       leftImageView.image = images[0]
       centerImageView.image = images[1]
       rightImageView.image = images[2]
       backImageView.image = images[3]
-      leftImageView.isHidden = false
-      centerImageView.isHidden = false
-      rightImageView.isHidden = false
-      backImageView.isHidden = false
     }
   }
 
@@ -212,21 +199,18 @@ final class TrioCarouselView: UIView {
     // if no images, no tap
     guard images.count > 0 else { return }
 
-    print("View Center Tapped!")
     delegate?.trioCarousel(didSelect: currentImageIndex)
   }
 
   @objc func leftViewTapped() {
     guard images.count > 1 else { return }
 
-    print("View Left Tapped!")
     updateRightSwipe()
   }
 
   @objc func rightViewTapped() {
     guard images.count > 1 else { return }
 
-    print("View Right Tapped!")
     updateLeftSwipe()
   }
 

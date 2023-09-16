@@ -36,6 +36,8 @@ class ViewController: UIViewController {
 
   @IBAction func updateImageNumberAction(_ sender: UIButton) {
     switch sender.tag {
+    case 0:
+      trioCarouselView.configure(images: [])
     case 1:
       trioCarouselView.configure(images: Array(images.prefix(1)))
     case 2:
@@ -43,7 +45,7 @@ class ViewController: UIViewController {
     case 3:
       trioCarouselView.configure(images: Array(images.prefix(3)))
     case 4:
-      trioCarouselView.configure(images: [])
+      trioCarouselView.configure(images: Array(images.prefix(4)))
     case 10:
       trioCarouselView.configure(images: images)
     default:
