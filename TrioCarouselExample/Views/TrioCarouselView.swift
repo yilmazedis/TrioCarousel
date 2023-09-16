@@ -82,37 +82,19 @@ final class TrioCarouselView: UIView {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-    setupFromNib()
+    setupNib()
     prepareView()
   }
 
   required init?(coder aDecoder: NSCoder) {
     super.init(coder: aDecoder)
-    setupFromNib()
+    setupNib()
     prepareView()
   }
 
   func configure(images: [UIImage]) {
     self.images = images
     initItems()
-  }
-
-  func setupFromNib() {
-    let bundle = Bundle(for: Self.self)
-    guard let view = UINib(nibName: String(describing: Self.self),
-                           bundle: bundle).instantiate(
-      withOwner: self,
-      options: nil).first as? UIView else {
-      fatalError("Error loading \(self) from nib")
-    }
-    addSubview(view)
-    view.translatesAutoresizingMaskIntoConstraints = false
-    NSLayoutConstraint.activate([
-      view.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
-      view.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-      view.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
-      view.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
-    ])
   }
 
   // MARK: - Preparation
@@ -157,6 +139,26 @@ final class TrioCarouselView: UIView {
     }
   }
 
+  func setupNib() {
+    let bundle = Bundle(for: Self.self)
+    guard let view = UINib(nibName: String(describing: Self.self),
+                           bundle: bundle).instantiate(
+      withOwner: self,
+      options: nil).first as? UIView else {
+      fatalError("Error loading \(self) from nib")
+    }
+    addSubview(view)
+    view.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      view.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+      view.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+      view.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
+      view.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor)
+    ])
+  }
+
+  // MARK: - Prepare Gestures
+
   private func prepareView() {
     prepareSwipeGesture()
     prepareTapGesture()
@@ -173,8 +175,6 @@ final class TrioCarouselView: UIView {
     rightImageView.alpha = 1
     backImageView.alpha = 0
   }
-
-  // MARK: - Prepare Gestures
 
   private func prepareSwipeGesture() {
     let leftGesture = UISwipeGestureRecognizer(target: self, action: #selector(handleSwipe))
@@ -234,9 +234,34 @@ final class TrioCarouselView: UIView {
       return
     }
   }
+
+  // MARK: - State Control
+
+  private func goLeft() {
+    currentState = (currentState - 1 + numberOfStates) % numberOfStates
+    currentImageIndex = (currentImageIndex - 1 + images.count) % images.count
+  }
+
+  private func goRight() {
+    currentState = (currentState + 1) % numberOfStates
+    currentImageIndex = (currentImageIndex + 1) % images.count
+  }
+
+  private func updateItem(with index: Int) {
+    let imageViews: [UIImageView] = [backImageView, rightImageView, leftImageView, centerImageView]
+    if let targetImageView = imageViews.first(where: { $0.alpha == 0 }) {
+      targetImageView.image = images[index]
+    }
+  }
+
+  private func updateCenterItem(with index: Int) {
+    delegate?.trioCarousel(imageForCenterAt: index)
+  }
 }
 
-// MARK: - Animations
+
+
+// MARK: - States
 
 private extension TrioCarouselView {
   private func updateRightSwipe() {
@@ -259,17 +284,6 @@ private extension TrioCarouselView {
       self.alphaStates(state: State(rawValue: self.getStateIndex)!)
       self.layoutIfNeeded()
     }
-  }
-
-  private func updateItem(with index: Int) {
-    let imageViews: [UIImageView] = [backImageView, rightImageView, leftImageView, centerImageView]
-    if let targetImageView = imageViews.first(where: { $0.alpha == 0 }) {
-      targetImageView.image = images[index]
-    }
-  }
-
-  private func updateCenterItem(with index: Int) {
-    delegate?.trioCarousel(imageForCenterAt: index)
   }
 
   private func alphaStates(state: State) {
@@ -344,15 +358,5 @@ private extension TrioCarouselView {
       setRightItem(direction: .left, size: .small)
       setBackItem(direction: .center, size: .big)
     }
-  }
-
-  private func goLeft() {
-    currentState = (currentState - 1 + numberOfStates) % numberOfStates
-    currentImageIndex = (currentImageIndex - 1 + images.count) % images.count
-  }
-
-  private func goRight() {
-    currentState = (currentState + 1) % numberOfStates
-    currentImageIndex = (currentImageIndex + 1) % images.count
   }
 }
