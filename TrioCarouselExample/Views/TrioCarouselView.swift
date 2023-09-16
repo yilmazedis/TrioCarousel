@@ -105,11 +105,17 @@ final class TrioCarouselView: UIView {
     emptyImages()
     positionStates(state: .centerCenter)
     switch images.count {
+    case 0:
+      leftImageView.isHidden = true
+      centerImageView.isHidden = true
+      rightImageView.isHidden = true
+      backImageView.isHidden = true
     case 1:
       currentImageIndex = 0
       updateCenterItem(with: 0)
       centerImageView.image = images[0]
       leftImageView.isHidden = true
+      centerImageView.isHidden = false
       rightImageView.isHidden = true
       backImageView.isHidden = true
     case 2:
@@ -117,6 +123,7 @@ final class TrioCarouselView: UIView {
       leftImageView.image = images[0]
       centerImageView.image = images[1]
       leftImageView.isHidden = false
+      centerImageView.isHidden = false
       rightImageView.isHidden = true
       backImageView.isHidden = true
     case 3:
@@ -125,6 +132,7 @@ final class TrioCarouselView: UIView {
       centerImageView.image = images[1]
       rightImageView.image = images[2]
       leftImageView.isHidden = false
+      centerImageView.isHidden = false
       rightImageView.isHidden = false
       backImageView.isHidden = false
     default:
@@ -134,12 +142,13 @@ final class TrioCarouselView: UIView {
       rightImageView.image = images[2]
       backImageView.image = images[3]
       leftImageView.isHidden = false
+      centerImageView.isHidden = false
       rightImageView.isHidden = false
       backImageView.isHidden = false
     }
   }
 
-  func setupNib() {
+  private func setupNib() {
     let bundle = Bundle(for: Self.self)
     guard let view = UINib(nibName: String(describing: Self.self),
                            bundle: bundle).instantiate(

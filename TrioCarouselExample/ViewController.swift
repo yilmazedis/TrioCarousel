@@ -43,7 +43,7 @@ class ViewController: UIViewController {
     case 3:
       trioCarouselView.configure(images: Array(images.prefix(3)))
     case 4:
-      trioCarouselView.configure(images: Array(images.prefix(4)))
+      trioCarouselView.configure(images: [])
     case 10:
       trioCarouselView.configure(images: images)
     default:
