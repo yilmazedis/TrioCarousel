@@ -31,6 +31,7 @@ class ViewController: UIViewController {
 
     trioCarouselView.delegate = self
     trioCarouselView.configure(images: images)
+    trioCarouselView.setCornerRadius(16)
   }
 
 

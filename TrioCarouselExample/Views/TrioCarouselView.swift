@@ -78,6 +78,29 @@ final class TrioCarouselView: UIView {
     images.count == 2 ? currentImageIndex % numberOfStates : currentState
   }
 
+  private var imageViews: [UIImageView] {
+    [leftImageView, centerImageView, rightImageView, backImageView]
+  }
+
+  // Create methods to update traits as needed
+  func setCornerRadius(_ radius: CGFloat) {
+    for imageView in imageViews {
+      imageView.layer.cornerRadius = radius
+    }
+  }
+
+  func setBorderWidth(_ width: CGFloat) {
+    for imageView in imageViews {
+      imageView.layer.borderWidth = width
+    }
+  }
+
+  func setBorderColor(_ color: UIColor) {
+    for imageView in imageViews {
+      imageView.layer.borderColor = color.cgColor
+    }
+  }
+
   // MARK: - View's Lifecycle
 
   override init(frame: CGRect) {
@@ -251,8 +274,6 @@ final class TrioCarouselView: UIView {
     delegate?.trioCarousel(imageForCenterAt: index)
   }
 }
-
-
 
 // MARK: - States
 
