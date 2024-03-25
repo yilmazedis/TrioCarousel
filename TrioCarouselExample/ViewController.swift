@@ -56,12 +56,12 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: TrioCarouselViewDelegate {
-  func trioCarousel(didSelect index: Int) {
+  func TrioCarouselView(didSelect index: Int) {
     selectionTitle.text = "\(titles[index]) is selected"
     print(index)
   }
 
-  func trioCarousel(imageForCenterAt index: Int) {
+  func TrioCarouselView(imageForCenterAt index: Int) {
     titleLabel.text = titles[index]
     print(index)
   }
